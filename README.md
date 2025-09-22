@@ -70,29 +70,6 @@ Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive S
 
 On startup, the app automatically inserts sample procurement requests and all commodity groups into the database if not present.
 
-## Docker
-
-Build and run with Docker:
-
-```sh
-docker build -t procurement-backend .
-docker run -p 8000:8000 --env-file src/.env procurement-backend
-```
-
-Or use Docker Compose (see `docker-compose.yml`):
-
-```sh
-docker-compose up
-```
-
-## Testing
-
-Unit tests are provided for core logic. Run with:
-
-```sh
-pytest
-```
-
 ## Contributing
 
 Pull requests and issues are welcome! Please follow standard Python and FastAPI best practices.
@@ -100,8 +77,3 @@ Pull requests and issues are welcome! Please follow standard Python and FastAPI 
 ## License
 
 MIT License
-
----
-
-**ENV file:**
-See above for required environment variables.

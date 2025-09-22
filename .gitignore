@@ -2,3 +2,5 @@ __pycache__
 procurement.db
 *.txt
 .env
+.mypy_cache/
+.ruff_cache/
