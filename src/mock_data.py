@@ -2,7 +2,8 @@
 
 
 from .models import ProcurementRequest, Status, OrderLine
-from .db import get_db_connection, serialize_order_lines
+from .db import get_db_connection, serialize_order_lines, get_commodity_group
+
 
 def add_mock_data():
 	conn = get_db_connection()
@@ -11,8 +12,11 @@ def add_mock_data():
 	c.execute('SELECT COUNT(*) FROM procurement_requests')
 	count = c.fetchone()[0]
 	if count > 0:
-		return  # Data already exists
+		return
 
+	commodity = get_commodity_group("001")
+	if commodity is None:
+		raise ValueError("Commodity group with id '001' does not exist. Please add it before inserting mock data.")
 	mock_requests = [
 		ProcurementRequest(
 			requestor_name='Alice Johnson',
@@ -95,5 +99,3 @@ def add_mock_data():
 			req.total_cost, req.department, req.status, serialize_order_lines(req.order_lines)
 		))
 	conn.commit()
-
-

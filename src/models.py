@@ -23,6 +23,12 @@ class OrderLine(BaseModel):
                 raise ValueError('total_price must be unit_price * amount')
         return v
 
+
+class CommodityGroup(BaseModel):
+    id: str
+    category: str
+    group: str
+
 class ProcurementRequest(BaseModel):
     id: int | None = None
     requestor_name: str = Field(..., min_length=1)

@@ -5,6 +5,12 @@ from .models import ProcurementRequest, OrderLine, Status
 from .db import get_db_connection, serialize_order_lines, deserialize_order_lines
 from .mock_data import add_mock_data
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import UploadFile, File
+from .utils.extract_pdf import extract_procurement_request_from_pdf
+from dotenv import load_dotenv
+from .setup import setup
+
+load_dotenv(override=True)
 
 app = FastAPI()
 
@@ -19,7 +25,7 @@ app.add_middleware(
 
 conn = get_db_connection()
 c = conn.cursor()
-
+setup()
 add_mock_data()
 
 @app.post("/requests", response_model=ProcurementRequest)
@@ -76,38 +82,9 @@ def update_request(request_id: int, req: ProcurementRequest):
     return ProcurementRequest(id=request_id, **req.dict(exclude={'id'}))
 
 
-from fastapi import UploadFile, File
-
 @app.post("/extract-pdf", response_model=ProcurementRequest)
 async def extract_pdf(file: UploadFile = File(...)):
-    # For now, return mock data as extracted info
-    return ProcurementRequest(
-        id=None,
-        requestor_name="Extracted User",
-        title="Extracted Title",
-        vendor_name="Global Tech Solutions",
-        vat_id="DE987654321",
-        commodity_group="Software",
-        order_lines=[
-            OrderLine(
-                position_description="Adobe Photoshop License",
-                unit_price=150.0,
-                amount=10,
-                unit="license",
-                total_price=1500.0
-            ),
-            OrderLine(
-                position_description="Adobe Illustrator License",
-                unit_price=120.0,
-                amount=5,
-                unit="license",
-                total_price=600.0
-            ),
-        ],
-        total_cost=2100.0,
-        department="Creative Marketing Department",
-        status=Status.open
-    )
+    return extract_procurement_request_from_pdf(file)
 
 @app.delete("/requests/{request_id}")
 def delete_request(request_id: int):
