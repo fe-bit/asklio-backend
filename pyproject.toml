@@ -14,7 +14,8 @@ dependencies = [
     "langchain-openai (>=0.3.33,<0.4.0)",
     "langchain-google-genai (>=2.1.12,<3.0.0)",
     "langchain-ollama (>=0.3.8,<0.4.0)",
-    "pypdf (>=6.1.0,<7.0.0)"
+    "pypdf (>=6.1.0,<7.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)"
 ]
 
 

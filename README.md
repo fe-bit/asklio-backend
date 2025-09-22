@@ -52,6 +52,11 @@ GOOGLE_API_KEY=your-google-api-key
 uvicorn src.main:app --reload
 ```
 
+and for production:
+
+```sh
+uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers 4
+```
 ### 5. API Docs
 
 Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive Swagger documentation.
