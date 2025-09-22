@@ -1,11 +1,14 @@
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain.output_parsers import PydanticOutputParser
 import os
 from fastapi import UploadFile
-from src.models import ProcurementRequest
+from src.models.db import ProcurementRequest
 from fastapi import HTTPException
+from .llm import get_llm
+from langchain.prompts import PromptTemplate
 
 
 async def extract_procurement_request_from_pdf(file: UploadFile):
@@ -23,23 +26,28 @@ async def extract_procurement_request_from_pdf(file: UploadFile):
     parser = PydanticOutputParser(pydantic_object=ProcurementRequest)
 
     # Prompt for extraction
-    prompt = f"""
-    Extract the procurement request information from the following text. Return only valid JSON for the ProcurementRequest model:
-    ---
-    {text}
-    ---
-    """
-
-    # Use OpenAI LLM via LangChain
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if not openai_api_key:
-        raise HTTPException(status_code=500, detail="OpenAI API key not set")
-    llm = ChatOpenAI(openai_api_key=openai_api_key, temperature=0)
-    response = llm.invoke(prompt)
-
+    format_instructions = parser.get_format_instructions()
+    prompt_template = PromptTemplate(
+        template="""
+        Extract the procurement request information from the following text.
+        
+        {format_instructions}
+        
+        Text:
+        ---
+        {text}
+        ---
+        """,
+        input_variables=["text"],
+        partial_variables={"format_instructions": format_instructions},
+    )
+    prompt = prompt_template.format_prompt(text=text)
+    llm = get_llm()
+    response = llm.invoke(prompt.to_string())
     # Parse output to ProcurementRequest
     try:
-        result = parser.parse(response.content)
+        text = response.content.replace("```json", "").replace("```", "").strip()
+        result = parser.parse(text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Parsing error: {str(e)}")
     finally:

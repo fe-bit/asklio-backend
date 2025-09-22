@@ -1,12 +1,6 @@
 from pydantic import BaseModel, Field, validator
-from enum import Enum
 from typing import List
-
-
-class Status(str, Enum):
-    open = "Open"
-    in_progress = "In Progress"
-    closed = "Closed"
+from .db import Status
 
 class OrderLine(BaseModel):
     position_description: str = Field(..., min_length=1)
@@ -23,19 +17,22 @@ class OrderLine(BaseModel):
                 raise ValueError('total_price must be unit_price * amount')
         return v
 
-
-class CommodityGroup(BaseModel):
-    id: str
-    category: str
-    group: str
-
-class ProcurementRequest(BaseModel):
-    id: int | None = None
+class ProcurementRequestCreateDTO(BaseModel):
     requestor_name: str = Field(..., min_length=1)
     title: str = Field(..., min_length=1)
     vendor_name: str = Field(..., min_length=1)
     vat_id: str = Field(..., min_length=1)
-    commodity_group: str = Field(..., min_length=1)
+    order_lines: List[OrderLine]
+    total_cost: float = Field(..., gt=0)
+    department: str = Field(..., min_length=1)
+
+
+class ProcurementRequestUpdateDTO(BaseModel):
+    id: int
+    requestor_name: str = Field(..., min_length=1)
+    title: str = Field(..., min_length=1)
+    vendor_name: str = Field(..., min_length=1)
+    vat_id: str = Field(..., min_length=1)
     order_lines: List[OrderLine]
     total_cost: float = Field(..., gt=0)
     department: str = Field(..., min_length=1)

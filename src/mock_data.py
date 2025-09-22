@@ -1,7 +1,7 @@
 
 
 
-from .models import ProcurementRequest, Status, OrderLine
+from .models.db import ProcurementRequest, Status, OrderLine
 from .db import get_db_connection, serialize_order_lines, get_commodity_group
 
 
@@ -14,16 +14,18 @@ def add_mock_data():
 	if count > 0:
 		return
 
-	commodity = get_commodity_group("001")
-	if commodity is None:
-		raise ValueError("Commodity group with id '001' does not exist. Please add it before inserting mock data.")
+	# Get appropriate CommodityGroup objects from DB
+	cg_laptop = get_commodity_group("029")  # Hardware
+	cg_chairs = get_commodity_group("015")  # Office Equipment
+	cg_cloud = get_commodity_group("031")   # Software
+
 	mock_requests = [
 		ProcurementRequest(
 			requestor_name='Alice Johnson',
 			title='Laptop Purchase',
 			vendor_name='TechWorld Inc.',
 			vat_id='DE123456789',
-			commodity_group='IT Equipment',
+			commodity_group=cg_laptop,
 			total_cost=1899.99,
 			department='Engineering',
 			status=Status.open,
@@ -56,7 +58,7 @@ def add_mock_data():
 			title='Office Chairs',
 			vendor_name='Comfort Seating',
 			vat_id='GB987654321',
-			commodity_group='Office Supplies',
+			commodity_group=cg_chairs,
 			total_cost=1250.0,
 			department='Facilities',
 			status=Status.open,
@@ -75,7 +77,7 @@ def add_mock_data():
 			title='Cloud Subscription',
 			vendor_name='CloudCo',
 			vat_id='US55-778899',
-			commodity_group='Software',
+			commodity_group=cg_cloud,
 			total_cost=499.5,
 			department='IT',
 			status=Status.open,
@@ -95,7 +97,7 @@ def add_mock_data():
 		c.execute('''INSERT INTO procurement_requests (
 			requestor_name, title, vendor_name, vat_id, commodity_group, total_cost, department, status, order_lines
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-			req.requestor_name, req.title, req.vendor_name, req.vat_id, req.commodity_group,
+			req.requestor_name, req.title, req.vendor_name, req.vat_id, req.commodity_group.id,
 			req.total_cost, req.department, req.status, serialize_order_lines(req.order_lines)
 		))
 	conn.commit()

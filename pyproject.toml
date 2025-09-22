@@ -1,0 +1,29 @@
+[project]
+name = "asklio-backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Patrik",email = "patrik.felbinger@web.de"}
+]
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+    "fastapi (>=0.117.1,<0.118.0)",
+    "langchain (>=0.3.27,<0.4.0)",
+    "langchain-community (>=0.3.29,<0.4.0)",
+    "langchain-openai (>=0.3.33,<0.4.0)",
+    "langchain-google-genai (>=2.1.12,<3.0.0)",
+    "langchain-ollama (>=0.3.8,<0.4.0)",
+    "pypdf (>=6.1.0,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.13.1,<0.14.0)",
+    "mypy (>=1.18.2,<2.0.0)"
+]
