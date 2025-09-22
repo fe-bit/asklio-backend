@@ -1,10 +1,8 @@
-import os
-from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
 from src.db import get_all_commodity_groups
 from src.models.dto import ProcurementRequestCreateDTO
 from fastapi import HTTPException
 from .llm import get_llm
+
 
 async def find_best_commodity_group(request: ProcurementRequestCreateDTO):
     # Get all commodity groups from DB

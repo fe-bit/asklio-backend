@@ -1,7 +1,5 @@
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
 from langchain.output_parsers import PydanticOutputParser
 import os
 from fastapi import UploadFile

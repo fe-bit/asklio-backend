@@ -8,6 +8,7 @@ class Status(str, Enum):
     in_progress = "In Progress"
     closed = "Closed"
 
+
 class OrderLine(BaseModel):
     position_description: str = Field(..., min_length=1)
     unit_price: float = Field(..., gt=0)
@@ -15,12 +16,12 @@ class OrderLine(BaseModel):
     unit: str = Field(..., min_length=1)
     total_price: float = Field(..., gt=0)
 
-    @validator('total_price')
+    @validator("total_price")
     def check_total_price(cls, v, values):
-        if 'unit_price' in values and 'amount' in values:
-            expected = values['unit_price'] * values['amount']
+        if "unit_price" in values and "amount" in values:
+            expected = values["unit_price"] * values["amount"]
             if abs(v - expected) > 0.01:
-                raise ValueError('total_price must be unit_price * amount')
+                raise ValueError("total_price must be unit_price * amount")
         return v
 
 
@@ -28,6 +29,7 @@ class CommodityGroup(BaseModel):
     id: str
     category: str
     group: str
+
 
 class ProcurementRequest(BaseModel):
     id: int | None = None
