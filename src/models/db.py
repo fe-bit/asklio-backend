@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, root_validator
 from enum import Enum
 from typing import List
 
@@ -12,17 +12,9 @@ class Status(str, Enum):
 class OrderLine(BaseModel):
     position_description: str = Field(..., min_length=1)
     unit_price: float = Field(..., gt=0)
-    amount: int = Field(..., gt=0)
+    amount: float = Field(..., gt=0)
     unit: str = Field(..., min_length=1)
     total_price: float = Field(..., gt=0)
-
-    @validator("total_price")
-    def check_total_price(cls, v, values):
-        if "unit_price" in values and "amount" in values:
-            expected = values["unit_price"] * values["amount"]
-            if abs(v - expected) > 0.01:
-                raise ValueError("total_price must be unit_price * amount")
-        return v
 
 
 class CommodityGroup(BaseModel):

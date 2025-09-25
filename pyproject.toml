@@ -15,7 +15,8 @@ dependencies = [
     "langchain-google-genai (>=2.1.12,<3.0.0)",
     "langchain-ollama (>=0.3.8,<0.4.0)",
     "pypdf (>=6.1.0,<7.0.0)",
-    "gunicorn (>=23.0.0,<24.0.0)"
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "python-multipart (>=0.0.20,<0.0.21)"
 ]
 
 
@@ -26,5 +27,6 @@ build-backend = "poetry.core.masonry.api"
 [dependency-groups]
 dev = [
     "ruff (>=0.13.1,<0.14.0)",
-    "mypy (>=1.18.2,<2.0.0)"
+    "mypy (>=1.18.2,<2.0.0)",
+    "pytest (>=8.4.2,<9.0.0)"
 ]

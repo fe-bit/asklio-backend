@@ -143,7 +143,7 @@ async def update_request(request_id: int, req: ProcurementRequestUpdateDTO):
     return proc_req
 
 
-@app.post("/extract-pdf", response_model=ProcurementRequest)
+@app.post("/extract-pdf", response_model=ProcurementRequestCreateDTO)
 async def extract_pdf(file: UploadFile = File(...)):
     return await extract_procurement_request_from_pdf(file)
 

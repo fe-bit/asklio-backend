@@ -86,5 +86,6 @@ def get_procurement_request(request_id: int):
             department=row[7],
             status=row[8],
             order_lines=deserialize_order_lines(row[9]),
+            comment=row[10],
         )
     return None

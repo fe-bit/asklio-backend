@@ -5,7 +5,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 def get_llm():
-    return get_gemini_llm()
+    return get_chatgpt_llm()
+    # return get_gemini_llm()
 
 
 def get_chatgpt_llm():
